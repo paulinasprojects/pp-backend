@@ -55,6 +55,9 @@ public class DoctorProfile {
   @JoinColumn(name = "user_id")
   private User user;
 
+  @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<Appointment> appointments = new HashSet<>();
+
   public void addPatient(PatientProfile patient) {
     patients.add(patient);
     patient.getDoctors().add(this);
