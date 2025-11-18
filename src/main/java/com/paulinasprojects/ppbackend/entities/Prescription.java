@@ -37,4 +37,12 @@ public class Prescription {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "diagnosis_id")
   private Diagnosis diagnosis;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "patient_id")
+  private PatientProfile patient;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "doctor_id")
+  private DoctorProfile doctor;
 }

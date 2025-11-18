@@ -58,6 +58,9 @@ public class DoctorProfile {
   @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Appointment> appointments = new HashSet<>();
 
+  @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<Prescription> prescriptions = new HashSet<>();
+
   public void addPatient(PatientProfile patient) {
     patients.add(patient);
     patient.getDoctors().add(this);
