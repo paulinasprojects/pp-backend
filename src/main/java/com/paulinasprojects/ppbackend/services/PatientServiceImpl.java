@@ -21,8 +21,6 @@ public class PatientServiceImpl implements PatientService {
   private final PatientProfileRepository patientProfileRepository;
   private final PatientMapper patientMapper;
 
-  // Add profile
-  // /api/patients
   @Override
   public PatientProfileDto addProfileToPatient(Long userId, PatientProfileDto patientProfileDto) {
     var patient = getPatient(userId);
@@ -34,8 +32,6 @@ public class PatientServiceImpl implements PatientService {
     return patientMapper.toPatientProfileDto(savedProfile);
   }
 
-  // Update patient profile
-  // /api/patients/{id}
   @Override
   public PatientProfileDto updatePatientProfile(Long userId, UpdatePatientProfileReq req) {
     var patient = getPatient(userId);
@@ -61,8 +57,6 @@ public class PatientServiceImpl implements PatientService {
     return patientMapper.toPatientProfileDto(profile);
   }
 
-  // delete patient profile
-  // /api/patients/{id}
   @Override
   public void deleteProfile(Long userId) {
     var patient = getPatient(userId);
