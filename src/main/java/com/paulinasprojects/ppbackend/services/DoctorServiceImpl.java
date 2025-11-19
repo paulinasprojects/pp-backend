@@ -70,18 +70,6 @@ public class DoctorServiceImpl implements DoctorService {
     doctorProfileRepository.delete(profile);
   }
 
-  // userRepository -> find the doc
-  // doctor profile repo -> save the doc
-
-  // Add profile
-  // /api/doctors
-
-  // Update patient profile
-  // /api/doctors/{id}
-
-  // delete patient profile
-  // /api/doctors/{id}
-
   private User getDoctor(Long userId) {
     return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Doctor not found"));
   }
