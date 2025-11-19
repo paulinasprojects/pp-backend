@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public class Diagnosis {
   private String notes;
 
   @Column(name = "date_created")
-  private LocalDate dateCreated = LocalDate.now();
+  private LocalDateTime dateCreated = LocalDateTime.now();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "doctor_id")
