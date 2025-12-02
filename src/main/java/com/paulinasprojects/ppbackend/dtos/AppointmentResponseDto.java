@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class AppointmentResponseDto {
   private Long id;
   private LocalDate appointmentDate;
-  private AppointmentStatus appointmentStatus;
+  private AppointmentStatus status;
   private String notes;
 
   private DoctorInfoDto doctor;

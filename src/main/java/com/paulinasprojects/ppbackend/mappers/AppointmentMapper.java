@@ -17,6 +17,7 @@ import java.util.List;
 public interface AppointmentMapper {
   @Mapping(target = "doctor", source = "doctor", qualifiedByName = "toDoctorInfoDto")
   @Mapping(target = "patient", source = "patient", qualifiedByName = "toPatientInfoDto")
+  @Mapping(target = "status", source = "status")
   AppointmentResponseDto toResponseDto(Appointment appointment);
 
   List<AppointmentResponseDto> toResponseDtoList(List<Appointment> appointments);
