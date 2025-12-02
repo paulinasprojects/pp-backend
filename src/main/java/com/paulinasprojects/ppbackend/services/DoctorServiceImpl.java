@@ -4,6 +4,7 @@ import com.paulinasprojects.ppbackend.dtos.DoctorProfileDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateDoctorProfileReq;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.User;
+import com.paulinasprojects.ppbackend.exceptions.DoctorNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.DoctorMapper;
 import com.paulinasprojects.ppbackend.repositories.DoctorProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.UserRepository;
@@ -71,6 +72,6 @@ public class DoctorServiceImpl implements DoctorService {
   }
 
   private User getDoctor(Long userId) {
-    return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Doctor not found"));
+    return userRepository.findById(userId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
   }
 }

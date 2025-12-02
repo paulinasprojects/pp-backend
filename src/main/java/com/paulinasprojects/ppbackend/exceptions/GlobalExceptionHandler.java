@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<String> UserNotFoundException(UserNotFoundException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+  }
+
   @ExceptionHandler(DoctorAlreadyExistsException.class)
   public ResponseEntity<String> DoctorAlreadyExistsException(DoctorAlreadyExistsException e) {
     String message = e.getMessage();

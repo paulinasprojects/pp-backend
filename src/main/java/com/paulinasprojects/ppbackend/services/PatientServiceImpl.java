@@ -4,6 +4,7 @@ import com.paulinasprojects.ppbackend.dtos.PatientProfileDto;
 import com.paulinasprojects.ppbackend.dtos.UpdatePatientProfileReq;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
 import com.paulinasprojects.ppbackend.entities.User;
+import com.paulinasprojects.ppbackend.exceptions.PatientNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.PatientMapper;
 import com.paulinasprojects.ppbackend.repositories.PatientProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.UserRepository;
@@ -70,6 +71,6 @@ public class PatientServiceImpl implements PatientService {
 
 
   private User getPatient(Long userId) {
-    return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Patient not found"));
+    return userRepository.findById(userId).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
   }
 }

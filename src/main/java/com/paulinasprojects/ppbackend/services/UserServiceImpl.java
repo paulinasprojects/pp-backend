@@ -6,6 +6,7 @@ import com.paulinasprojects.ppbackend.dtos.UpdateUserResponseDto;
 import com.paulinasprojects.ppbackend.dtos.UserDto;
 import com.paulinasprojects.ppbackend.entities.Role;
 import com.paulinasprojects.ppbackend.exceptions.DuplicateUserException;
+import com.paulinasprojects.ppbackend.exceptions.UserNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.UserMapper;
 import com.paulinasprojects.ppbackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UpdateUserResponseDto updateUser(Long id, UpdateUserRequestDto dto) {
-    var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     userMapper.updateUserEntityFromDto(dto, user);
 
     var updatedUser = userRepository.save(user);
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void deleteUser(Long id) {
-    var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     userRepository.delete(user);
   }
 }
