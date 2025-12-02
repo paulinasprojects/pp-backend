@@ -42,4 +42,42 @@ public class GlobalExceptionHandler {
     String message = e.getMessage();
     return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(NotDoctorRoleException.class)
+  public ResponseEntity<String> NotDoctorRoleException(NotDoctorRoleException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NotPatientRoleException.class)
+  public ResponseEntity<String> NotPatientRoleException(NotPatientRoleException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(DoctorProfileAlreadyExistsException.class)
+  public ResponseEntity<String> DoctorProfileAlreadyExists(DoctorProfileAlreadyExistsException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(PatientProfileAlreadyExistsException.class)
+  public ResponseEntity<String> PatientProfileAlreadyExists(PatientProfileAlreadyExistsException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+  }
+
+
+  @ExceptionHandler(ProfileNotFoundException.class)
+  public ResponseEntity<String>ProfileNotFound(ProfileNotFoundException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(AppointmentNotFoundException.class)
+  public ResponseEntity<String> AppointmentNotFound(AppointmentNotFoundException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+  }
+
 }

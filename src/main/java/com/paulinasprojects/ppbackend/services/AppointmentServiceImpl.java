@@ -6,6 +6,9 @@ import com.paulinasprojects.ppbackend.entities.Appointment;
 import com.paulinasprojects.ppbackend.entities.AppointmentStatus;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
+import com.paulinasprojects.ppbackend.exceptions.AppointmentNotFoundException;
+import com.paulinasprojects.ppbackend.exceptions.DoctorNotFoundException;
+import com.paulinasprojects.ppbackend.exceptions.PatientNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.AppointmentMapper;
 import com.paulinasprojects.ppbackend.repositories.AppointmentRepository;
 import com.paulinasprojects.ppbackend.repositories.DoctorProfileRepository;
@@ -28,7 +31,7 @@ public class AppointmentServiceImpl implements AppointmentService {
   @Override
   @Transactional(readOnly = true)
   public List<AppointmentResponseDto> getAppointmentsByDoctor(Long doctorId) {
-    DoctorProfile doctor = doctorProfileRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
+    DoctorProfile doctor = getDoctor(doctorId);
     List<Appointment> appointments = appointmentRepository.findByDoctor(doctor);
     return appointmentMapper.toResponseDtoList(appointments);
   }
@@ -36,15 +39,15 @@ public class AppointmentServiceImpl implements AppointmentService {
   @Override
   @Transactional(readOnly = true)
   public List<AppointmentResponseDto> getAppointmentsByPatient(Long patientId) {
-    PatientProfile patient = patientProfileRepository.findById(patientId).orElseThrow(() -> new RuntimeException("Patient not found"));
+    PatientProfile patient = getPatient(patientId);
     List<Appointment> appointments = appointmentRepository.findByPatient(patient);
     return appointmentMapper.toResponseDtoList(appointments);
   }
 
   @Override
   public AppointmentResponseDto createAppointment(AppointmentRequestDto request) {
-    DoctorProfile doctor = doctorProfileRepository.findById(request.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
-    PatientProfile patient = patientProfileRepository.findById(request.getPatientId()).orElseThrow(() -> new RuntimeException("Patient not found"));
+    DoctorProfile doctor = getDoctor(request.getDoctorId());
+    PatientProfile patient = getPatient(request.getPatientId());
     Appointment appointment = Appointment.builder()
             .appointmentDate(request.getAppointmentDate())
             .notes(request.getNotes())
@@ -59,13 +62,13 @@ public class AppointmentServiceImpl implements AppointmentService {
   @Override
   @Transactional(readOnly = true)
   public AppointmentResponseDto getAppointmentById(Long id) {
-    var appointment = appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found"));
+    var appointment = getAppointment(id);
     return appointmentMapper.toResponseDto(appointment);
   }
 
   @Override
   public AppointmentResponseDto updateAppointmentStatus(Long id, String status) {
-    var appointment = appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found"));
+    var appointment = getAppointment(id);
     try {
       var appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
       appointment.setStatus(appointmentStatus);
@@ -78,13 +81,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
   @Override
   public AppointmentResponseDto updateAppointment(Long id, AppointmentRequestDto request) {
-    var appointment = appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found"));
+    var appointment = getAppointment(id);
     if (request.getDoctorId() != null) {
-      var doctor = doctorProfileRepository.findById(request.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
+      DoctorProfile doctor = getDoctor(request.getDoctorId());
       appointment.setDoctor(doctor);
     }
     if (request.getPatientId() != null) {
-      var patient = patientProfileRepository.findById(request.getPatientId()).orElseThrow(() -> new RuntimeException("Patient not found"));
+      PatientProfile patient = getPatient(request.getPatientId());
       appointment.setPatient(patient);
     }
     if (request.getAppointmentDate() != null) {
@@ -101,8 +104,21 @@ public class AppointmentServiceImpl implements AppointmentService {
   @Override
   public void deleteAppointment(Long id) {
       if (!appointmentRepository.existsById(id)) {
-        throw new RuntimeException("Appointment not found");
+        throw new AppointmentNotFoundException("Appointment not found");
       }
       appointmentRepository.deleteById(id);
   }
+
+  private DoctorProfile getDoctor(Long doctorId) {
+    return doctorProfileRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
+  }
+
+  private PatientProfile getPatient(Long patientId) {
+    return patientProfileRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
+  }
+
+  private Appointment getAppointment(Long id) {
+    return appointmentRepository.findById(id).orElseThrow(() -> new AppointmentNotFoundException("Appointment not found"));
+  }
+
 }

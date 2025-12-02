@@ -39,7 +39,7 @@ public class DoctorProfile {
   private LocalDate dateOfBirth;
 
   @Column(name = "registered_date")
-  private LocalDate registeredDate;
+  private LocalDate registeredDate = LocalDate.now();
 
   @ManyToMany
   @JoinTable(

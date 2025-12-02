@@ -3,8 +3,12 @@ package com.paulinasprojects.ppbackend.services;
 import com.paulinasprojects.ppbackend.dtos.PatientProfileDto;
 import com.paulinasprojects.ppbackend.dtos.UpdatePatientProfileReq;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
+import com.paulinasprojects.ppbackend.entities.Role;
 import com.paulinasprojects.ppbackend.entities.User;
+import com.paulinasprojects.ppbackend.exceptions.NotPatientRoleException;
 import com.paulinasprojects.ppbackend.exceptions.PatientNotFoundException;
+import com.paulinasprojects.ppbackend.exceptions.PatientProfileAlreadyExistsException;
+import com.paulinasprojects.ppbackend.exceptions.ProfileNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.PatientMapper;
 import com.paulinasprojects.ppbackend.repositories.PatientProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.UserRepository;
@@ -25,6 +29,13 @@ public class PatientServiceImpl implements PatientService {
   @Override
   public PatientProfileDto addProfileToPatient(Long userId, PatientProfileDto patientProfileDto) {
     var patient = getPatient(userId);
+     if (patient.getRole() != Role.PATIENT) {
+       throw new NotPatientRoleException("This user is not a patient");
+     }
+
+     if (patient.getPatientProfile() != null) {
+       throw  new PatientProfileAlreadyExistsException("Patient already has a profile");
+     }
 
     var profile = patientMapper.toEntity(patientProfileDto);
     profile.setUser(patient);
@@ -44,7 +55,7 @@ public class PatientServiceImpl implements PatientService {
               .bio(req.getBio())
               .phoneNumber(req.getPhoneNumber())
               .dateOfBirth(req.getDateOfBirth())
-              .registeredDate(req.getRegisteredDate() != null ? req.getRegisteredDate() : LocalDate.now())
+              .registeredDate(LocalDate.now())
               .build();
       patient.setPatientProfile(profile);
     } else {
@@ -63,7 +74,7 @@ public class PatientServiceImpl implements PatientService {
     var patient = getPatient(userId);
     var profile = patient.getPatientProfile();
     if (profile == null) {
-      throw new RuntimeException("Profile not found");
+      throw new ProfileNotFoundException("Profile not found");
     }
     patient.setPatientProfile(null);
     patientProfileRepository.delete(profile);

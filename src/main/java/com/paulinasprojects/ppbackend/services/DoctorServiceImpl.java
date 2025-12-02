@@ -3,8 +3,12 @@ package com.paulinasprojects.ppbackend.services;
 import com.paulinasprojects.ppbackend.dtos.DoctorProfileDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateDoctorProfileReq;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
+import com.paulinasprojects.ppbackend.entities.Role;
 import com.paulinasprojects.ppbackend.entities.User;
 import com.paulinasprojects.ppbackend.exceptions.DoctorNotFoundException;
+import com.paulinasprojects.ppbackend.exceptions.DoctorProfileAlreadyExistsException;
+import com.paulinasprojects.ppbackend.exceptions.NotDoctorRoleException;
+import com.paulinasprojects.ppbackend.exceptions.ProfileNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.DoctorMapper;
 import com.paulinasprojects.ppbackend.repositories.DoctorProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.UserRepository;
@@ -26,6 +30,14 @@ public class DoctorServiceImpl implements DoctorService {
   public DoctorProfileDto addProfileToDoctor(Long userId, DoctorProfileDto doctorProfileDto) {
     var doctor = getDoctor(userId);
 
+    if (doctor.getRole() != Role.DOCTOR) {
+      throw new NotDoctorRoleException("This user is not a doctor");
+    }
+
+    if (doctor.getDoctorProfile() != null) {
+      throw new DoctorProfileAlreadyExistsException("Doctor already has a profile");
+    }
+
     var profile = doctorMapper.toEntity(doctorProfileDto);
     profile.setUser(doctor);
 
@@ -46,7 +58,7 @@ public class DoctorServiceImpl implements DoctorService {
               .specialization(req.getSpecialization())
               .phoneNumber(req.getPhoneNumber())
               .dateOfBirth(req.getDateOfBirth())
-              .registeredDate(req.getRegisteredDate() != null ? req.getRegisteredDate() : LocalDate.now())
+              .registeredDate(LocalDate.now())
               .build();
       doctor.setDoctorProfile(profile);
     } else {
@@ -65,7 +77,7 @@ public class DoctorServiceImpl implements DoctorService {
     var doctor = getDoctor(userId);
     var profile = doctor.getDoctorProfile();
     if (profile == null) {
-      throw new RuntimeException("Profile not found");
+      throw new ProfileNotFoundException("Profile not found");
     }
     doctor.setDoctorProfile(null);
     doctorProfileRepository.delete(profile);
@@ -74,4 +86,5 @@ public class DoctorServiceImpl implements DoctorService {
   private User getDoctor(Long userId) {
     return userRepository.findById(userId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
   }
+
 }

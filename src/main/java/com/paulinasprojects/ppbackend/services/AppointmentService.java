@@ -2,7 +2,6 @@ package com.paulinasprojects.ppbackend.services;
 
 import com.paulinasprojects.ppbackend.dtos.AppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
-import com.paulinasprojects.ppbackend.entities.Appointment;
 
 import java.util.List;
 

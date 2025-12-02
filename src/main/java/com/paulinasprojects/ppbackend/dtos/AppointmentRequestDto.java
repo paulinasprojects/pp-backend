@@ -1,6 +1,5 @@
 package com.paulinasprojects.ppbackend.dtos;
 
-import com.paulinasprojects.ppbackend.entities.AppointmentStatus;
 import lombok.Data;
 
 import java.time.LocalDate;
