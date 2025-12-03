@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,6 +29,28 @@ public class DiagnosisServiceImpl implements DiagnosisService {
   public final DiagnosisRepository diagnosisRepository;
   public final AppointmentRepository appointmentRepository;
   public final DiagnosisMapper diagnosisMapper;
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<DiagnosisResponseDto> getDiagnosesByDoctor(Long doctorId) {
+    var doctor = getDoctor(doctorId);
+    List<Diagnosis> diagnoses = diagnosisRepository.findByDoctor(doctor);
+    return diagnosisMapper.toResponseDtoList(diagnoses);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<DiagnosisResponseDto> getDiagnosesByPatient(Long patientId) {
+    var patient = getPatient(patientId);
+    List<Diagnosis> diagnoses = diagnosisRepository.findByPatient(patient);
+    return diagnosisMapper.toResponseDtoList(diagnoses);
+  }
+
+  @Override
+  public DiagnosisResponseDto getDiagnosisByAppointment(Long appointmentId) {
+   var diagnosis = diagnosisRepository.findByAppointmentId(appointmentId).orElseThrow(() -> new RuntimeException("Diagnosis not found for appointment with Id: " + appointmentId));
+   return diagnosisMapper.toResponseDto(diagnosis);
+  }
 
   @Override
   public DiagnosisResponseDto createDiagnosis(DiagnosisRequestDto request) {

@@ -1,10 +1,8 @@
 package com.paulinasprojects.ppbackend.mappers;
 
-import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisResponseDto;
 import com.paulinasprojects.ppbackend.dtos.DoctorInfoDto;
 import com.paulinasprojects.ppbackend.dtos.PatientInfoDto;
-import com.paulinasprojects.ppbackend.entities.Appointment;
 import com.paulinasprojects.ppbackend.entities.Diagnosis;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
@@ -22,7 +20,7 @@ public interface DiagnosisMapper {
   @Mapping(target = "appointmentId", source = "appointment.id")
   DiagnosisResponseDto toResponseDto(Diagnosis diagnosis);
 
-  List<AppointmentResponseDto> toResponseDtoList(List<Appointment> appointments);
+  List<DiagnosisResponseDto> toResponseDtoList(List<Diagnosis> diagnoses);
 
   @Named("toDoctorInfoDto")
   @Mapping(target = "name", source = "user.name")

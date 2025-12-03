@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/diagnoses")
@@ -27,6 +29,26 @@ public class DiagnosisController {
           @PathVariable Long id
   ) {
     var diagnosis = diagnosisService.getDiagnosisById(id);
+    return ResponseEntity.ok(diagnosis);
+  }
+
+  @GetMapping("/doctors/{doctorId}")
+  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByDoctor(@PathVariable Long doctorId) {
+    List<DiagnosisResponseDto> diagnoses = diagnosisService.getDiagnosesByDoctor(doctorId);
+    return ResponseEntity.ok(diagnoses);
+  }
+
+  @GetMapping("/patients/{patientId}")
+  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByPatient(@PathVariable Long patientId) {
+    List<DiagnosisResponseDto> diagnoses = diagnosisService.getDiagnosesByPatient(patientId);
+    return ResponseEntity.ok(diagnoses);
+  }
+
+  @GetMapping("/appointments/{appointmentId}")
+  public ResponseEntity<DiagnosisResponseDto> getDiagnosisByAppointment(
+          @PathVariable Long appointmentId
+  ) {
+    var diagnosis = diagnosisService.getDiagnosisByAppointment(appointmentId);
     return ResponseEntity.ok(diagnosis);
   }
 
