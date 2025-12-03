@@ -8,6 +8,7 @@ import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
 import com.paulinasprojects.ppbackend.exceptions.AppointmentNotFoundException;
 import com.paulinasprojects.ppbackend.exceptions.DoctorNotFoundException;
+import com.paulinasprojects.ppbackend.exceptions.InvalidStatusException;
 import com.paulinasprojects.ppbackend.exceptions.PatientNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.AppointmentMapper;
 import com.paulinasprojects.ppbackend.repositories.AppointmentRepository;
@@ -75,7 +76,7 @@ public class AppointmentServiceImpl implements AppointmentService {
       var updatedAppointment = appointmentRepository.save(appointment);
       return appointmentMapper.toResponseDto(updatedAppointment);
     }catch (IllegalArgumentException e) {
-        throw new RuntimeException("Invalid appointment status" + status);
+        throw new InvalidStatusException("Invalid appointment status " + status);
     }
   }
 

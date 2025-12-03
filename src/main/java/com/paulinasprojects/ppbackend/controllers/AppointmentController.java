@@ -2,6 +2,7 @@ package com.paulinasprojects.ppbackend.controllers;
 
 import com.paulinasprojects.ppbackend.dtos.AppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdateAppointmentStatusDto;
 import com.paulinasprojects.ppbackend.services.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -51,9 +52,9 @@ public class AppointmentController {
   @PutMapping("/{id}/status")
   public ResponseEntity<AppointmentResponseDto> updateAppointmentStatus(
           @PathVariable Long id,
-          @RequestParam String status
-  ) {
-    var appointment = appointmentService.updateAppointmentStatus(id, status);
+          @RequestBody UpdateAppointmentStatusDto request
+          ) {
+    var appointment = appointmentService.updateAppointmentStatus(id, request.getStatus());
     return ResponseEntity.ok(appointment);
   }
 

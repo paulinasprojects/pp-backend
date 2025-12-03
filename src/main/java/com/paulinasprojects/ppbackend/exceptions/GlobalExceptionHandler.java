@@ -80,4 +80,10 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(InvalidStatusException.class)
+  public ResponseEntity<String> InvalidStatus(InvalidStatusException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+  }
+
 }
