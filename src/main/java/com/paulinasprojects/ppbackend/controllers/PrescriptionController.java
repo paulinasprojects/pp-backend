@@ -3,6 +3,7 @@ package com.paulinasprojects.ppbackend.controllers;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
 import com.paulinasprojects.ppbackend.services.PrescriptionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class PrescriptionController {
 
   @PostMapping
   public ResponseEntity<PrescriptionResponseDto> createPrescription(
-          @RequestBody PrescriptionRequestDto request
+         @Valid @RequestBody PrescriptionRequestDto request
           ) {
     var prescription = prescriptionService.createPrescription(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(prescription);
@@ -57,7 +58,7 @@ public class PrescriptionController {
   @PutMapping("/{id}")
   public ResponseEntity<PrescriptionResponseDto> updatePrescription(
           @PathVariable Long id,
-          @RequestBody PrescriptionRequestDto request
+         @Valid @RequestBody PrescriptionRequestDto request
   ) {
     var prescription = prescriptionService.updatePrescription(id, request);
     return ResponseEntity.ok(prescription);

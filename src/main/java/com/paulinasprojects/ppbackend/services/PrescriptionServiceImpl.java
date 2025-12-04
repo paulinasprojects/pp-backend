@@ -59,6 +59,18 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     var doctor = getDoctor(request.getDoctorId());
     var patient = getPatient(request.getPatientId());
     var diagnosis = getDiagnosis(request.getDiagnosisId());
+    if (!diagnosis.getDoctor().getId().equals(doctor.getId())) {
+      throw new IllegalArgumentException("Doctor cannot prescribe for a diagnosis created by another doctor");
+    }
+
+    if (!diagnosis.getPatient().getId().equals(patient.getId())) {
+      throw new IllegalArgumentException("Diagnosis does not belong to this patient");
+    }
+
+    if (prescriptionRepository.findByDiagnosisId(request.getDiagnosisId()).isPresent()) {
+      throw new IllegalStateException("A prescription already exists for this diagnosis.");
+    }
+
     var prescription = Prescription.builder()
             .diagnosis(diagnosis)
             .dosage(request.getDosage())

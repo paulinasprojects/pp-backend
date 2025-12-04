@@ -4,6 +4,7 @@ import com.paulinasprojects.ppbackend.dtos.AppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateAppointmentStatusDto;
 import com.paulinasprojects.ppbackend.services.AppointmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class AppointmentController {
 
   @PostMapping
   public ResponseEntity<AppointmentResponseDto> createAppointment(
-          @RequestBody AppointmentRequestDto request
+        @Valid @RequestBody AppointmentRequestDto request
           ) {
     var appointment = appointmentService.createAppointment(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(appointment);
@@ -61,7 +62,7 @@ public class AppointmentController {
   @PutMapping("/{id}")
   public ResponseEntity<AppointmentResponseDto> updateAppointment(
           @PathVariable Long id,
-          @RequestBody AppointmentRequestDto request
+       @Valid @RequestBody AppointmentRequestDto request
   ) {
     var appointment = appointmentService.updateAppointment(id, request);
     return ResponseEntity.ok(appointment);
