@@ -33,13 +33,15 @@ public class DiagnosisController {
   }
 
   @GetMapping("/doctors/{doctorId}")
-  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByDoctor(@PathVariable Long doctorId) {
+  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByDoctor(
+          @PathVariable Long doctorId) {
     List<DiagnosisResponseDto> diagnoses = diagnosisService.getDiagnosesByDoctor(doctorId);
     return ResponseEntity.ok(diagnoses);
   }
 
   @GetMapping("/patients/{patientId}")
-  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByPatient(@PathVariable Long patientId) {
+  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByPatient(
+          @PathVariable Long patientId) {
     List<DiagnosisResponseDto> diagnoses = diagnosisService.getDiagnosesByPatient(patientId);
     return ResponseEntity.ok(diagnoses);
   }

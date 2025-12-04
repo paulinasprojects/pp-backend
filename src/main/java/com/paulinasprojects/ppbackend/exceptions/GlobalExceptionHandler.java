@@ -80,10 +80,20 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(DiagnoseNotFoundException.class)
+  public ResponseEntity<String> DiagnoseNotFound(DiagnoseNotFoundException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+  }
+  @ExceptionHandler(PrescriptionNotFoundException.class)
+  public ResponseEntity<String> PrescriptionNotFound(PrescriptionNotFoundException e) {
+    String message = e.getMessage();
+    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+  }
+
   @ExceptionHandler(InvalidStatusException.class)
   public ResponseEntity<String> InvalidStatus(InvalidStatusException e) {
     String message = e.getMessage();
     return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
   }
-
 }

@@ -7,6 +7,7 @@ import com.paulinasprojects.ppbackend.entities.Diagnosis;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
 import com.paulinasprojects.ppbackend.exceptions.AppointmentNotFoundException;
+import com.paulinasprojects.ppbackend.exceptions.DiagnoseNotFoundException;
 import com.paulinasprojects.ppbackend.exceptions.DoctorNotFoundException;
 import com.paulinasprojects.ppbackend.exceptions.PatientNotFoundException;
 import com.paulinasprojects.ppbackend.mappers.DiagnosisMapper;
@@ -47,8 +48,9 @@ public class DiagnosisServiceImpl implements DiagnosisService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public DiagnosisResponseDto getDiagnosisByAppointment(Long appointmentId) {
-   var diagnosis = diagnosisRepository.findByAppointmentId(appointmentId).orElseThrow(() -> new RuntimeException("Diagnosis not found for appointment with Id: " + appointmentId));
+   var diagnosis = diagnosisRepository.findByAppointmentId(appointmentId).orElseThrow(() -> new DiagnoseNotFoundException("Diagnosis not found for appointment with Id: " + appointmentId));
    return diagnosisMapper.toResponseDto(diagnosis);
   }
 
@@ -108,13 +110,13 @@ public class DiagnosisServiceImpl implements DiagnosisService {
   @Override
   public void deleteDiagnosis(Long id) {
     if (!diagnosisRepository.existsById(id)) {
-      throw new RuntimeException("Diagnosis not found");
+      throw new DiagnoseNotFoundException("Diagnosis not found");
     }
     diagnosisRepository.deleteById(id);
   }
 
   private Diagnosis getDiagnosis(Long id) {
-    return diagnosisRepository.findById(id).orElseThrow(() ->  new RuntimeException("Diagnosis not found"));
+    return diagnosisRepository.findById(id).orElseThrow(() ->  new DiagnoseNotFoundException("Diagnosis not found"));
   }
 
   private DoctorProfile getDoctor(Long doctorId) {
@@ -128,5 +130,4 @@ public class DiagnosisServiceImpl implements DiagnosisService {
   private Appointment getAppointment(Long id) {
     return appointmentRepository.findById(id).orElseThrow(() -> new AppointmentNotFoundException("Appointment not found"));
   }
-
 }

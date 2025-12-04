@@ -1,0 +1,16 @@
+package com.paulinasprojects.ppbackend.services;
+
+import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
+import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
+
+import java.util.List;
+
+public interface PrescriptionService {
+  List<PrescriptionResponseDto> getPrescriptionsByDoctor(Long doctorId);
+  List<PrescriptionResponseDto> getPrescriptionsByPatient(Long patientId);
+  PrescriptionResponseDto getPrescriptionByDiagnosisId(Long diagnosisId);
+  PrescriptionResponseDto createPrescription(PrescriptionRequestDto request);
+  PrescriptionResponseDto updatePrescription(Long id, PrescriptionRequestDto request);
+  PrescriptionResponseDto getPrescriptionById(Long id);
+  void deletePrescription(Long id);
+}
