@@ -32,5 +32,8 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Long
           "LOWER(p.medicationName) LIKE LOWER(CONCAT('%', :medicationName, '%'))")
   List<Prescription> findByMedicationNameContainingIgnoreCase(@Param("medicationName") String medicationName);
 
+  @Query("SELECT p FROM Prescription p WHERE p.diagnosis.appointment.id = :appointmentId")
+  List<Prescription> findByAppointmentId(@Param("appointmentId") Long appointmentId);
+
   //  List<Prescription> findPrescriptionsByDiagnosis(Diagnosis diagnosis);
 }

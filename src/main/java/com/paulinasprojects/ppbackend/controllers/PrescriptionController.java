@@ -1,5 +1,6 @@
 package com.paulinasprojects.ppbackend.controllers;
 
+import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
 import com.paulinasprojects.ppbackend.services.PrescriptionService;
@@ -34,6 +35,15 @@ public class PrescriptionController {
     return ResponseEntity.status(HttpStatus.CREATED).body(prescription);
   }
 
+  @PatchMapping("/{id}/renew")
+  public ResponseEntity<PrescriptionResponseDto> renewPrescription(
+          @PathVariable Long id,
+          @Valid @RequestBody PrescriptionRenewalDto request
+          ) {
+    var prescription = prescriptionService.renewPrescription(id, request);
+    return ResponseEntity.ok(prescription);
+  }
+
   @GetMapping("/doctors/{doctorId}")
   public ResponseEntity<List<PrescriptionResponseDto>> getPrescriptionsByDoctor(
           @PathVariable Long doctorId
@@ -63,6 +73,14 @@ public class PrescriptionController {
           @PathVariable Long patientId
   ) {
     var prescriptions = prescriptionService.getExpiredPrescriptionsByPatientId(patientId);
+    return ResponseEntity.ok(prescriptions);
+  }
+
+  @GetMapping("/appointments/{appointmentId}")
+  public ResponseEntity<List<PrescriptionResponseDto>> getPrescriptionsByAppointment(
+          @PathVariable Long appointmentId
+  ) {
+    var prescriptions = prescriptionService.getPrescriptionsByAppointment(appointmentId);
     return ResponseEntity.ok(prescriptions);
   }
 

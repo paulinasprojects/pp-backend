@@ -1,5 +1,6 @@
 package com.paulinasprojects.ppbackend.services;
 
+import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
 import com.paulinasprojects.ppbackend.entities.Diagnosis;
@@ -70,6 +71,21 @@ public class PrescriptionServiceImpl implements PrescriptionService {
   public List<PrescriptionResponseDto> searchPrescriptionsByMedication(String medicationName) {
     List<Prescription> prescriptions = prescriptionRepository.findByMedicationNameContainingIgnoreCase(medicationName);
     return prescriptionMapper.toResponseDtoList(prescriptions);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<PrescriptionResponseDto> getPrescriptionsByAppointment(Long appointmentId) {
+    List<Prescription> prescriptions = prescriptionRepository.findByAppointmentId(appointmentId);
+    return prescriptionMapper.toResponseDtoList(prescriptions);
+  }
+
+  @Override
+  public PrescriptionResponseDto renewPrescription(Long id, PrescriptionRenewalDto request) {
+    var prescription = getPrescription(id);
+    prescription.setEndDate(request.getNewEndDate());
+    var updatedPrescription = prescriptionRepository.save(prescription);
+    return prescriptionMapper.toResponseDto(updatedPrescription);
   }
 
   @Override
