@@ -17,6 +17,15 @@ import java.util.List;
 public class PrescriptionController {
   private final PrescriptionService prescriptionService;
 
+
+  @GetMapping("/search")
+  public ResponseEntity<List<PrescriptionResponseDto>>searchPrescriptionsByMedication(
+          @RequestParam String medicationName
+  ) {
+    var prescriptions = prescriptionService.searchPrescriptionsByMedication(medicationName);
+    return ResponseEntity.ok(prescriptions);
+  }
+
   @PostMapping
   public ResponseEntity<PrescriptionResponseDto> createPrescription(
          @Valid @RequestBody PrescriptionRequestDto request
@@ -38,6 +47,22 @@ public class PrescriptionController {
           @PathVariable Long patientId
   ) {
     List<PrescriptionResponseDto> prescriptions = prescriptionService.getPrescriptionsByPatient(patientId);
+    return ResponseEntity.ok(prescriptions);
+  }
+
+  @GetMapping("/patients/{patientId}/active")
+  public ResponseEntity<List<PrescriptionResponseDto>> getActivePrescriptionsByPatient(
+          @PathVariable Long patientId
+  ) {
+    var prescriptions = prescriptionService.getActivePrescriptionsByPatient(patientId);
+    return ResponseEntity.ok(prescriptions);
+  }
+
+  @GetMapping("/patients/{patientId}/expired")
+  public ResponseEntity<List<PrescriptionResponseDto>> getExpiredPrescriptionsByPatientId(
+          @PathVariable Long patientId
+  ) {
+    var prescriptions = prescriptionService.getExpiredPrescriptionsByPatientId(patientId);
     return ResponseEntity.ok(prescriptions);
   }
 

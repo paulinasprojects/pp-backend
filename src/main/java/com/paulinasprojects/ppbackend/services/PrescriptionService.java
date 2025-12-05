@@ -8,6 +8,9 @@ import java.util.List;
 public interface PrescriptionService {
   List<PrescriptionResponseDto> getPrescriptionsByDoctor(Long doctorId);
   List<PrescriptionResponseDto> getPrescriptionsByPatient(Long patientId);
+  List<PrescriptionResponseDto> getActivePrescriptionsByPatient(Long patientId);
+  List<PrescriptionResponseDto> getExpiredPrescriptionsByPatientId(Long patientId);
+  List<PrescriptionResponseDto> searchPrescriptionsByMedication(String medicationName);
   PrescriptionResponseDto getPrescriptionByDiagnosisId(Long diagnosisId);
   PrescriptionResponseDto createPrescription(PrescriptionRequestDto request);
   PrescriptionResponseDto updatePrescription(Long id, PrescriptionRequestDto request);

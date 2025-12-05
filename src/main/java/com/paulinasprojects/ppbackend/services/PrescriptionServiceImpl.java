@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -44,6 +45,30 @@ public class PrescriptionServiceImpl implements PrescriptionService {
   public List<PrescriptionResponseDto> getPrescriptionsByPatient(Long patientId) {
     var patient = getPatient(patientId);
     List<Prescription> prescriptions = prescriptionRepository.findByPatient(patient);
+    return prescriptionMapper.toResponseDtoList(prescriptions);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<PrescriptionResponseDto> getActivePrescriptionsByPatient(Long patientId) {
+    var patient = getPatient(patientId);
+    var today = LocalDate.now();
+    List<Prescription> prescriptions = prescriptionRepository.findActiveByPatientAndDate(patient, today);
+    return prescriptionMapper.toResponseDtoList(prescriptions);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<PrescriptionResponseDto> getExpiredPrescriptionsByPatientId(Long patientId) {
+    var today = LocalDate.now();
+    List<Prescription> prescriptions = prescriptionRepository.findExpiredByPatientId(patientId, today);
+    return prescriptionMapper.toResponseDtoList(prescriptions);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<PrescriptionResponseDto> searchPrescriptionsByMedication(String medicationName) {
+    List<Prescription> prescriptions = prescriptionRepository.findByMedicationNameContainingIgnoreCase(medicationName);
     return prescriptionMapper.toResponseDtoList(prescriptions);
   }
 
