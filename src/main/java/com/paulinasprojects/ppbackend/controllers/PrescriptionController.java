@@ -1,5 +1,7 @@
 package com.paulinasprojects.ppbackend.controllers;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
+import com.paulinasprojects.ppbackend.config.AppConstants;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
@@ -45,18 +47,27 @@ public class PrescriptionController {
   }
 
   @GetMapping("/doctors/{doctorId}")
-  public ResponseEntity<List<PrescriptionResponseDto>> getPrescriptionsByDoctor(
-          @PathVariable Long doctorId
+  public ResponseEntity<PaginatedResponseDto<PrescriptionResponseDto>> getPrescriptionsByDoctor(
+          @PathVariable Long doctorId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
+
   ) {
-    List<PrescriptionResponseDto> prescriptions = prescriptionService.getPrescriptionsByDoctor(doctorId);
+    var prescriptions = prescriptionService.getPrescriptionsByDoctor(doctorId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(prescriptions);
   }
 
   @GetMapping("/patients/{patientId}")
-  public ResponseEntity<List<PrescriptionResponseDto>> getPrescriptionsByPatient(
-          @PathVariable Long patientId
+  public ResponseEntity<PaginatedResponseDto<PrescriptionResponseDto>> getPrescriptionsByPatient(
+          @PathVariable Long patientId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
-    List<PrescriptionResponseDto> prescriptions = prescriptionService.getPrescriptionsByPatient(patientId);
+    var prescriptions = prescriptionService.getPrescriptionsByPatient(patientId, page,size, sortBy, sortDirection);
     return ResponseEntity.ok(prescriptions);
   }
 

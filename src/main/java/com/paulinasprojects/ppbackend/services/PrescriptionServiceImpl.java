@@ -1,5 +1,6 @@
 package com.paulinasprojects.ppbackend.services;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
@@ -17,6 +18,10 @@ import com.paulinasprojects.ppbackend.repositories.DoctorProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.PatientProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.PrescriptionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,18 +40,29 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<PrescriptionResponseDto> getPrescriptionsByDoctor(Long doctorId) {
+  public PaginatedResponseDto<PrescriptionResponseDto> getPrescriptionsByDoctor(Long doctorId, Integer page, Integer size, String sortBy, String sortDirection) {
     var doctor = getDoctor(doctorId);
-    List<Prescription> prescriptions = prescriptionRepository.findByDoctor(doctor);
-    return prescriptionMapper.toResponseDtoList(prescriptions);
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Prescription> result = prescriptionRepository.findByDoctor(doctor, pageable);
+
+    Page<PrescriptionResponseDto> mapped = result.map(prescriptionMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<PrescriptionResponseDto> getPrescriptionsByPatient(Long patientId) {
+  public PaginatedResponseDto<PrescriptionResponseDto> getPrescriptionsByPatient(Long patientId, Integer page, Integer size, String sortBy, String sortDirection) {
     var patient = getPatient(patientId);
-    List<Prescription> prescriptions = prescriptionRepository.findByPatient(patient);
-    return prescriptionMapper.toResponseDtoList(prescriptions);
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Prescription> result = prescriptionRepository.findByPatient(patient, pageable);
+    Page<PrescriptionResponseDto> mapped = result.map(prescriptionMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
@@ -84,6 +100,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
   public PrescriptionResponseDto renewPrescription(Long id, PrescriptionRenewalDto request) {
     var prescription = getPrescription(id);
     prescription.setEndDate(request.getNewEndDate());
+    prescription.setInstructions(request.getNewInstructions());
     var updatedPrescription = prescriptionRepository.save(prescription);
     return prescriptionMapper.toResponseDto(updatedPrescription);
   }
@@ -196,5 +213,16 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
   private Diagnosis getDiagnosis(Long id) {
     return diagnosisRepository.findById(id).orElseThrow(() -> new DiagnoseNotFoundException("Diagnosis not found"));
+  }
+
+  private <T> PaginatedResponseDto<T> toPaginatedResponse(Page<T> page) {
+    return new PaginatedResponseDto<>(
+            page.getContent(),
+            page.getNumber(),
+            page.getSize(),
+            page.getTotalElements(),
+            page.getTotalPages(),
+            page.isLast()
+    );
   }
 }

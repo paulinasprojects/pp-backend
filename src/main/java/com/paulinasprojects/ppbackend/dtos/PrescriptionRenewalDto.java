@@ -9,4 +9,5 @@ import java.time.LocalDate;
 public class PrescriptionRenewalDto {
   @NotBlank(message = "New end date is required")
   private LocalDate newEndDate;
+  private String newInstructions;
 }

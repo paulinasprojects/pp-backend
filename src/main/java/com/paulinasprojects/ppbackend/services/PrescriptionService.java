@@ -1,5 +1,6 @@
 package com.paulinasprojects.ppbackend.services;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
@@ -7,8 +8,8 @@ import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
 import java.util.List;
 
 public interface PrescriptionService {
-  List<PrescriptionResponseDto> getPrescriptionsByDoctor(Long doctorId);
-  List<PrescriptionResponseDto> getPrescriptionsByPatient(Long patientId);
+  PaginatedResponseDto<PrescriptionResponseDto> getPrescriptionsByDoctor(Long doctorId, Integer page, Integer size, String sortBy, String sortDirection);
+  PaginatedResponseDto<PrescriptionResponseDto> getPrescriptionsByPatient(Long patientId, Integer page, Integer size, String sortBy, String sortDirection);
   List<PrescriptionResponseDto> getActivePrescriptionsByPatient(Long patientId);
   List<PrescriptionResponseDto> getExpiredPrescriptionsByPatientId(Long patientId);
   List<PrescriptionResponseDto> searchPrescriptionsByMedication(String medicationName);

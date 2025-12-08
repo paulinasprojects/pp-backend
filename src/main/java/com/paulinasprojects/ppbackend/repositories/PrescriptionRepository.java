@@ -4,6 +4,8 @@ import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
 import com.paulinasprojects.ppbackend.entities.Prescription;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,8 +16,8 @@ import java.util.Optional;
 
 @Repository
 public interface PrescriptionRepository extends JpaRepository<Prescription, Long> {
-  List<Prescription> findByDoctor(DoctorProfile doctor);
-  List<Prescription> findByPatient(PatientProfile patient);
+  Page<Prescription> findByDoctor(DoctorProfile doctor, Pageable pageable);
+  Page<Prescription> findByPatient(PatientProfile patient, Pageable pageable);
   Optional<Prescription> findByDiagnosisId(Long diagnosisId);
   @Query("SELECT p FROM Prescription p WHERE p.patient = :patient " +
           "AND p.startDate <= :date " +
