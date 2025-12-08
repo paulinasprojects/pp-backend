@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,12 +19,15 @@ import java.util.List;
 public class PrescriptionController {
   private final PrescriptionService prescriptionService;
 
-
   @GetMapping("/search")
-  public ResponseEntity<List<PrescriptionResponseDto>>searchPrescriptionsByMedication(
-          @RequestParam String medicationName
+  public ResponseEntity<PaginatedResponseDto<PrescriptionResponseDto>>searchPrescriptionsByMedication(
+          @RequestParam String medicationName,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
-    var prescriptions = prescriptionService.searchPrescriptionsByMedication(medicationName);
+    var prescriptions = prescriptionService.searchPrescriptionsByMedication(medicationName, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(prescriptions);
   }
 
@@ -72,26 +74,38 @@ public class PrescriptionController {
   }
 
   @GetMapping("/patients/{patientId}/active")
-  public ResponseEntity<List<PrescriptionResponseDto>> getActivePrescriptionsByPatient(
-          @PathVariable Long patientId
+  public ResponseEntity<PaginatedResponseDto<PrescriptionResponseDto>> getActivePrescriptionsByPatient(
+          @PathVariable Long patientId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
-    var prescriptions = prescriptionService.getActivePrescriptionsByPatient(patientId);
+    var prescriptions = prescriptionService.getActivePrescriptionsByPatient(patientId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(prescriptions);
   }
 
   @GetMapping("/patients/{patientId}/expired")
-  public ResponseEntity<List<PrescriptionResponseDto>> getExpiredPrescriptionsByPatientId(
-          @PathVariable Long patientId
+  public ResponseEntity<PaginatedResponseDto<PrescriptionResponseDto>> getExpiredPrescriptionsByPatientId(
+          @PathVariable Long patientId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
-    var prescriptions = prescriptionService.getExpiredPrescriptionsByPatientId(patientId);
+    var prescriptions = prescriptionService.getExpiredPrescriptionsByPatientId(patientId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(prescriptions);
   }
 
   @GetMapping("/appointments/{appointmentId}")
-  public ResponseEntity<List<PrescriptionResponseDto>> getPrescriptionsByAppointment(
-          @PathVariable Long appointmentId
+  public ResponseEntity<PaginatedResponseDto<PrescriptionResponseDto>> getPrescriptionsByAppointment(
+          @PathVariable Long appointmentId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
-    var prescriptions = prescriptionService.getPrescriptionsByAppointment(appointmentId);
+    var prescriptions = prescriptionService.getPrescriptionsByAppointment(appointmentId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(prescriptions);
   }
 

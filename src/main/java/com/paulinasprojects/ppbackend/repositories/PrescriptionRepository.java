@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,20 +21,22 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Long
   @Query("SELECT p FROM Prescription p WHERE p.patient = :patient " +
           "AND p.startDate <= :date " +
           "AND (p.endDate IS NULL OR p.endDate >= :date)")
-  List<Prescription> findActiveByPatientAndDate(
+  Page<Prescription> findActiveByPatientAndDate(
           @Param("patient") PatientProfile patient,
-          @Param("date") LocalDate date);
+          @Param("date") LocalDate date,
+          Pageable pageable
+  );
 
   @Query("SELECT p FROM Prescription p WHERE p.patient.user.id = :patientId " +
           "AND p.endDate < :today")
-  List<Prescription> findExpiredByPatientId(@Param("patientId") Long patientId, @Param("today") LocalDate today);
+  Page<Prescription> findExpiredByPatientId(@Param("patientId") Long patientId, @Param("today") LocalDate today, Pageable pageable);
 
   @Query("SELECT p FROM Prescription p WHERE " +
           "LOWER(p.medicationName) LIKE LOWER(CONCAT('%', :medicationName, '%'))")
-  List<Prescription> findByMedicationNameContainingIgnoreCase(@Param("medicationName") String medicationName);
+  Page<Prescription> findByMedicationNameContainingIgnoreCase(@Param("medicationName") String medicationName, Pageable pageable);
 
   @Query("SELECT p FROM Prescription p WHERE p.diagnosis.appointment.id = :appointmentId")
-  List<Prescription> findByAppointmentId(@Param("appointmentId") Long appointmentId);
+  Page<Prescription> findByAppointmentId(@Param("appointmentId") Long appointmentId, Pageable pageable);
 
   //  List<Prescription> findPrescriptionsByDiagnosis(Diagnosis diagnosis);
 }

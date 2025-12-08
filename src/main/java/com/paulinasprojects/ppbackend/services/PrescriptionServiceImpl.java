@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,33 +66,53 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<PrescriptionResponseDto> getActivePrescriptionsByPatient(Long patientId) {
+  public PaginatedResponseDto<PrescriptionResponseDto> getActivePrescriptionsByPatient(Long patientId, Integer page, Integer size, String sortBy, String sortDirection) {
     var patient = getPatient(patientId);
     var today = LocalDate.now();
-    List<Prescription> prescriptions = prescriptionRepository.findActiveByPatientAndDate(patient, today);
-    return prescriptionMapper.toResponseDtoList(prescriptions);
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Prescription> prescriptions = prescriptionRepository.findActiveByPatientAndDate(patient, today, pageable);
+    Page<PrescriptionResponseDto> mapped = prescriptions.map(prescriptionMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<PrescriptionResponseDto> getExpiredPrescriptionsByPatientId(Long patientId) {
+  public PaginatedResponseDto<PrescriptionResponseDto> getExpiredPrescriptionsByPatientId(Long patientId, Integer page, Integer size, String sortBy, String sortDirection) {
     var today = LocalDate.now();
-    List<Prescription> prescriptions = prescriptionRepository.findExpiredByPatientId(patientId, today);
-    return prescriptionMapper.toResponseDtoList(prescriptions);
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Prescription> prescriptions = prescriptionRepository.findExpiredByPatientId(patientId, today, pageable);
+    Page<PrescriptionResponseDto> mapped = prescriptions.map(prescriptionMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<PrescriptionResponseDto> searchPrescriptionsByMedication(String medicationName) {
-    List<Prescription> prescriptions = prescriptionRepository.findByMedicationNameContainingIgnoreCase(medicationName);
-    return prescriptionMapper.toResponseDtoList(prescriptions);
+  public PaginatedResponseDto<PrescriptionResponseDto> searchPrescriptionsByMedication(String medicationName, Integer page, Integer size, String sortBy, String sortDirection) {
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Prescription> prescriptions = prescriptionRepository.findByMedicationNameContainingIgnoreCase(medicationName, pageable);
+    Page<PrescriptionResponseDto> mapped = prescriptions.map(prescriptionMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<PrescriptionResponseDto> getPrescriptionsByAppointment(Long appointmentId) {
-    List<Prescription> prescriptions = prescriptionRepository.findByAppointmentId(appointmentId);
-    return prescriptionMapper.toResponseDtoList(prescriptions);
+  public PaginatedResponseDto<PrescriptionResponseDto> getPrescriptionsByAppointment(Long appointmentId, Integer page, Integer size, String sortBy, String sortDirection) {
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Prescription> prescriptions = prescriptionRepository.findByAppointmentId(appointmentId, pageable);
+    Page<PrescriptionResponseDto> mapped = prescriptions.map(prescriptionMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
