@@ -1,13 +1,13 @@
 package com.paulinasprojects.ppbackend.services;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisResponseDto;
 
-import java.util.List;
 
 public interface DiagnosisService {
-  List<DiagnosisResponseDto> getDiagnosesByDoctor(Long doctorId);
-  List<DiagnosisResponseDto> getDiagnosesByPatient(Long patientId);
+  PaginatedResponseDto<DiagnosisResponseDto> getDiagnosesByDoctor(Long doctorId, Integer page, Integer size, String sortBy, String sortDirection);
+  PaginatedResponseDto<DiagnosisResponseDto> getDiagnosesByPatient(Long patientId, Integer page,  Integer size, String sortBy, String sortDirection);
   DiagnosisResponseDto getDiagnosisByAppointment(Long appointmentId);
   DiagnosisResponseDto createDiagnosis(DiagnosisRequestDto request);
   DiagnosisResponseDto updateDiagnosis(Long id, DiagnosisRequestDto request);

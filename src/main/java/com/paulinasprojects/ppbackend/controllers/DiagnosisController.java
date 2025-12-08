@@ -1,5 +1,7 @@
 package com.paulinasprojects.ppbackend.controllers;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
+import com.paulinasprojects.ppbackend.config.AppConstants;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisResponseDto;
 import com.paulinasprojects.ppbackend.services.DiagnosisService;
@@ -9,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,16 +35,26 @@ public class DiagnosisController {
   }
 
   @GetMapping("/doctors/{doctorId}")
-  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByDoctor(
-          @PathVariable Long doctorId) {
-    List<DiagnosisResponseDto> diagnoses = diagnosisService.getDiagnosesByDoctor(doctorId);
+  public ResponseEntity<PaginatedResponseDto<DiagnosisResponseDto>> getDiagnosesByDoctor(
+          @PathVariable Long doctorId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
+  ) {
+    var diagnoses = diagnosisService.getDiagnosesByDoctor(doctorId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(diagnoses);
   }
 
   @GetMapping("/patients/{patientId}")
-  public ResponseEntity<List<DiagnosisResponseDto>> getDiagnosesByPatient(
-          @PathVariable Long patientId) {
-    List<DiagnosisResponseDto> diagnoses = diagnosisService.getDiagnosesByPatient(patientId);
+  public ResponseEntity<PaginatedResponseDto<DiagnosisResponseDto>> getDiagnosesByPatient(
+          @PathVariable Long patientId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
+  ) {
+    var diagnoses = diagnosisService.getDiagnosesByPatient(patientId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(diagnoses);
   }
 

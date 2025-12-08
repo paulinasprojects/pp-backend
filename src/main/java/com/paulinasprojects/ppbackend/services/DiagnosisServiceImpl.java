@@ -1,5 +1,6 @@
 package com.paulinasprojects.ppbackend.services;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisResponseDto;
 import com.paulinasprojects.ppbackend.entities.Appointment;
@@ -16,10 +17,13 @@ import com.paulinasprojects.ppbackend.repositories.DiagnosisRepository;
 import com.paulinasprojects.ppbackend.repositories.DoctorProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.PatientProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +37,28 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<DiagnosisResponseDto> getDiagnosesByDoctor(Long doctorId) {
+  public PaginatedResponseDto<DiagnosisResponseDto> getDiagnosesByDoctor(Long doctorId, Integer page, Integer size, String sortBy, String sortDirection) {
     var doctor = getDoctor(doctorId);
-    List<Diagnosis> diagnoses = diagnosisRepository.findByDoctor(doctor);
-    return diagnosisMapper.toResponseDtoList(diagnoses);
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Diagnosis> diagnoses = diagnosisRepository.findByDoctor(doctor, pageable);
+    Page<DiagnosisResponseDto> mapped = diagnoses.map(diagnosisMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<DiagnosisResponseDto> getDiagnosesByPatient(Long patientId) {
+  public PaginatedResponseDto<DiagnosisResponseDto> getDiagnosesByPatient(Long patientId, Integer page, Integer size, String sortBy, String sortDirection) {
     var patient = getPatient(patientId);
-    List<Diagnosis> diagnoses = diagnosisRepository.findByPatient(patient);
-    return diagnosisMapper.toResponseDtoList(diagnoses);
+    Sort sort = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Diagnosis> diagnoses = diagnosisRepository.findByPatient(patient, pageable);
+    Page<DiagnosisResponseDto> mapped = diagnoses.map(diagnosisMapper::toResponseDto);
+    return toPaginatedResponse(mapped);
   }
 
   @Override
@@ -129,5 +143,16 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
   private Appointment getAppointment(Long id) {
     return appointmentRepository.findById(id).orElseThrow(() -> new AppointmentNotFoundException("Appointment not found"));
+  }
+
+  private <T> PaginatedResponseDto<T> toPaginatedResponse(Page<T> page) {
+    return new PaginatedResponseDto<>(
+            page.getContent(),
+            page.getNumber(),
+            page.getSize(),
+            page.getTotalElements(),
+            page.getTotalPages(),
+            page.isLast()
+    );
   }
 }
