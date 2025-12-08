@@ -24,7 +24,7 @@ public class PrescriptionController {
           @RequestParam String medicationName,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_PRESCRIPTIONS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var prescriptions = prescriptionService.searchPrescriptionsByMedication(medicationName, page, size, sortBy, sortDirection);
@@ -53,7 +53,7 @@ public class PrescriptionController {
           @PathVariable Long doctorId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_PRESCRIPTIONS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
 
   ) {
@@ -66,7 +66,7 @@ public class PrescriptionController {
           @PathVariable Long patientId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_PRESCRIPTIONS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var prescriptions = prescriptionService.getPrescriptionsByPatient(patientId, page,size, sortBy, sortDirection);
@@ -78,7 +78,7 @@ public class PrescriptionController {
           @PathVariable Long patientId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_PRESCRIPTIONS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var prescriptions = prescriptionService.getActivePrescriptionsByPatient(patientId, page, size, sortBy, sortDirection);
@@ -90,7 +90,7 @@ public class PrescriptionController {
           @PathVariable Long patientId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_PRESCRIPTIONS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var prescriptions = prescriptionService.getExpiredPrescriptionsByPatientId(patientId, page, size, sortBy, sortDirection);
@@ -102,7 +102,7 @@ public class PrescriptionController {
           @PathVariable Long appointmentId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_PRESCRIPTIONS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var prescriptions = prescriptionService.getPrescriptionsByAppointment(appointmentId, page, size, sortBy, sortDirection);

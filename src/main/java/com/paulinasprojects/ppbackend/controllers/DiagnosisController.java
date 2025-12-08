@@ -39,7 +39,7 @@ public class DiagnosisController {
           @PathVariable Long doctorId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIAGNOSIS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var diagnoses = diagnosisService.getDiagnosesByDoctor(doctorId, page, size, sortBy, sortDirection);
@@ -51,7 +51,7 @@ public class DiagnosisController {
           @PathVariable Long patientId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIAGNOSIS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var diagnoses = diagnosisService.getDiagnosesByPatient(patientId, page, size, sortBy, sortDirection);

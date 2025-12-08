@@ -24,7 +24,7 @@ public class AppointmentController {
           @PathVariable Long doctorId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_APPOINTMENTS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var appointments = appointmentService.getAppointmentsByDoctor(doctorId, page, size, sortBy, sortDirection);
@@ -36,7 +36,7 @@ public class AppointmentController {
           @PathVariable Long patientId,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
           @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
-          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_APPOINTMENTS_BY) String sortBy,
           @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
     var appointments = appointmentService.getAppointmentsByPatient(patientId, page, size, sortBy, sortDirection);
