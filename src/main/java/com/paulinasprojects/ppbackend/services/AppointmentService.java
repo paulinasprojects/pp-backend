@@ -1,13 +1,12 @@
 package com.paulinasprojects.ppbackend.services;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
 
-import java.util.List;
-
 public interface AppointmentService {
-  List<AppointmentResponseDto> getAppointmentsByDoctor(Long doctorId);
-  List<AppointmentResponseDto> getAppointmentsByPatient(Long patientId);
+  PaginatedResponseDto<AppointmentResponseDto> getAppointmentsByDoctor(Long doctorId, Integer page, Integer size, String sortBy, String sortDirection);
+  PaginatedResponseDto<AppointmentResponseDto> getAppointmentsByPatient(Long patientId, Integer page, Integer size, String sortBy, String sortDirection);
   AppointmentResponseDto createAppointment(AppointmentRequestDto appointment);
   AppointmentResponseDto getAppointmentById(Long id);
   AppointmentResponseDto updateAppointmentStatus(Long id, String status);

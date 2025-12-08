@@ -1,5 +1,7 @@
 package com.paulinasprojects.ppbackend.controllers;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
+import com.paulinasprojects.ppbackend.config.AppConstants;
 import com.paulinasprojects.ppbackend.dtos.AppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateAppointmentStatusDto;
@@ -10,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/appointments")
@@ -20,17 +20,26 @@ public class AppointmentController {
   private final AppointmentService appointmentService;
 
   @GetMapping("/doctors/{doctorId}")
-  public ResponseEntity<List<AppointmentResponseDto>> getAppointmentsByDoctor(
-          @PathVariable Long doctorId) {
-    List<AppointmentResponseDto> appointments = appointmentService.getAppointmentsByDoctor(doctorId);
+  public ResponseEntity<PaginatedResponseDto<AppointmentResponseDto>> getAppointmentsByDoctor(
+          @PathVariable Long doctorId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
+  ) {
+    var appointments = appointmentService.getAppointmentsByDoctor(doctorId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(appointments);
   }
 
   @GetMapping("/patients/{patientId}")
-  public ResponseEntity<List<AppointmentResponseDto>> getAppointmentsByPatient(
-          @PathVariable Long patientId
+  public ResponseEntity<PaginatedResponseDto<AppointmentResponseDto>> getAppointmentsByPatient(
+          @PathVariable Long patientId,
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
   ) {
-    List<AppointmentResponseDto> appointments = appointmentService.getAppointmentsByPatient(patientId);
+    var appointments = appointmentService.getAppointmentsByPatient(patientId, page, size, sortBy, sortDirection);
     return ResponseEntity.ok(appointments);
   }
 
