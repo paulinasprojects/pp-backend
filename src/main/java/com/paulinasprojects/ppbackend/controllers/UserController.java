@@ -5,6 +5,8 @@ import com.paulinasprojects.ppbackend.dtos.UpdateUserRequestDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateUserResponseDto;
 import com.paulinasprojects.ppbackend.dtos.UserDto;
 import com.paulinasprojects.ppbackend.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +15,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Users", description = "API for managing users")
 @RequestMapping("/api")
 public class UserController {
   private final UserService userService;
 
   @PostMapping("/users")
+  @Operation(summary = "Register a user")
   public ResponseEntity<UserDto> registerUser(
           @Valid @RequestBody SignupRequest request,
           UriComponentsBuilder uriBuilder) {
@@ -26,6 +30,7 @@ public class UserController {
    return ResponseEntity.created(uri).body(userDto);
   }
 
+  @Operation(summary = "Update a user")
   @PutMapping("/users/{id}")
   public UpdateUserResponseDto updateUser(
           @PathVariable Long id,
@@ -34,6 +39,7 @@ public class UserController {
     return userService.updateUser(id, request);
   }
 
+  @Operation(summary = "Delete a user")
   @DeleteMapping("/users/{id}")
   public ResponseEntity<Void> deleteUser(
           @PathVariable Long id
