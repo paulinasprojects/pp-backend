@@ -1,5 +1,7 @@
 package com.paulinasprojects.ppbackend.controllers;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
+import com.paulinasprojects.ppbackend.config.AppConstants;
 import com.paulinasprojects.ppbackend.dtos.DoctorProfileDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateDoctorProfileReq;
 import com.paulinasprojects.ppbackend.services.DoctorService;
@@ -12,6 +14,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/doctors")
 public class DoctorController {
   private final DoctorService doctorService;
+
+  @GetMapping
+  public ResponseEntity<PaginatedResponseDto<DoctorProfileDto>> getAllDoctors(
+          @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
+          @RequestParam(defaultValue = AppConstants.PAGE_SIZE) Integer size,
+          @RequestParam(defaultValue = AppConstants.SORT_PATIENTS_BY) String sortBy,
+          @RequestParam(defaultValue = AppConstants.SORT_DIRECTION) String sortDirection
+  ) {
+    var doctors = doctorService.getAllDoctors(page, size, sortBy, sortDirection);
+    return ResponseEntity.ok().body(doctors);
+  }
 
   @PostMapping("/{id}/profile")
   public ResponseEntity<DoctorProfileDto> addProfile(

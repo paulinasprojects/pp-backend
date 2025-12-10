@@ -1,5 +1,6 @@
 package com.paulinasprojects.ppbackend.services;
 
+import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.DoctorProfileDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateDoctorProfileReq;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
@@ -13,6 +14,10 @@ import com.paulinasprojects.ppbackend.mappers.DoctorMapper;
 import com.paulinasprojects.ppbackend.repositories.DoctorProfileRepository;
 import com.paulinasprojects.ppbackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +30,15 @@ public class DoctorServiceImpl implements DoctorService {
   private final UserRepository userRepository;
   private final DoctorProfileRepository doctorProfileRepository;
   private final DoctorMapper doctorMapper;
+
+  @Override
+  public PaginatedResponseDto<DoctorProfileDto> getAllDoctors(Integer page, Integer size, String sortBy, String sortDirection) {
+    Sort sort = sortDirection.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<DoctorProfile> doctors = doctorProfileRepository.findAll(pageable);
+    Page<DoctorProfileDto> mapped = doctors.map(doctorMapper::toDoctorProfileDto);
+    return toPaginatedResponse(mapped);
+  }
 
   @Override
   public DoctorProfileDto addProfileToDoctor(Long userId, DoctorProfileDto doctorProfileDto) {
@@ -87,4 +101,14 @@ public class DoctorServiceImpl implements DoctorService {
     return userRepository.findById(userId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
   }
 
+  private <T> PaginatedResponseDto<T> toPaginatedResponse(Page<T> page) {
+    return new PaginatedResponseDto<>(
+            page.getContent(),
+            page.getNumber(),
+            page.getSize(),
+            page.getTotalElements(),
+            page.getTotalPages(),
+            page.isLast()
+    );
+  }
 }

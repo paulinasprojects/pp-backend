@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class PatientProfileDto {
-//  private Long id;
+  private Long id;
   private String address;
   private String bio;
   private String phoneNumber;
