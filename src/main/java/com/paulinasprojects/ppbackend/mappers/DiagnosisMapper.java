@@ -3,15 +3,11 @@ package com.paulinasprojects.ppbackend.mappers;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisResponseDto;
 import com.paulinasprojects.ppbackend.dtos.DoctorInfoDto;
 import com.paulinasprojects.ppbackend.dtos.PatientInfoDto;
+import com.paulinasprojects.ppbackend.dtos.UpdateDiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.entities.Diagnosis;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-
-import java.util.List;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface DiagnosisMapper {
@@ -20,7 +16,7 @@ public interface DiagnosisMapper {
   @Mapping(target = "appointmentId", source = "appointment.id")
   DiagnosisResponseDto toResponseDto(Diagnosis diagnosis);
 
-  List<DiagnosisResponseDto> toResponseDtoList(List<Diagnosis> diagnoses);
+  void updateDiagnosis(UpdateDiagnosisRequestDto request, @MappingTarget Diagnosis diagnosis);
 
   @Named("toDoctorInfoDto")
   @Mapping(target = "name", source = "user.name")

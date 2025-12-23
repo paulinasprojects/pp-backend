@@ -4,6 +4,7 @@ import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdatePrescriptionRequestDto;
 
 
 public interface PrescriptionService {
@@ -16,7 +17,7 @@ public interface PrescriptionService {
   PrescriptionResponseDto renewPrescription(Long id, PrescriptionRenewalDto request);
   PrescriptionResponseDto getPrescriptionByDiagnosisId(Long diagnosisId);
   PrescriptionResponseDto createPrescription(PrescriptionRequestDto request);
-  PrescriptionResponseDto updatePrescription(Long id, PrescriptionRequestDto request);
+  PrescriptionResponseDto updatePrescription(Long id, UpdatePrescriptionRequestDto request);
   PrescriptionResponseDto getPrescriptionById(Long id);
   void deletePrescription(Long id);
 }

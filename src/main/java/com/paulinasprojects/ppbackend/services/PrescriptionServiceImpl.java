@@ -4,6 +4,7 @@ import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdatePrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.entities.Diagnosis;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
 import com.paulinasprojects.ppbackend.entities.PatientProfile;
@@ -45,9 +46,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
     Pageable pageable = PageRequest.of(page, size, sort);
-    Page<Prescription> result = prescriptionRepository.findByDoctor(doctor, pageable);
+    Page<Prescription> prescriptions = prescriptionRepository.findByDoctor(doctor, pageable);
 
-    Page<PrescriptionResponseDto> mapped = result.map(prescriptionMapper::toResponseDto);
+    Page<PrescriptionResponseDto> mapped = prescriptions.map(prescriptionMapper::toResponseDto);
     return toPaginatedResponse(mapped);
   }
 
@@ -59,8 +60,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
     Pageable pageable = PageRequest.of(page, size, sort);
-    Page<Prescription> result = prescriptionRepository.findByPatient(patient, pageable);
-    Page<PrescriptionResponseDto> mapped = result.map(prescriptionMapper::toResponseDto);
+    Page<Prescription> prescriptions = prescriptionRepository.findByPatient(patient, pageable);
+    Page<PrescriptionResponseDto> mapped = prescriptions.map(prescriptionMapper::toResponseDto);
     return toPaginatedResponse(mapped);
   }
 
@@ -163,43 +164,10 @@ public class PrescriptionServiceImpl implements PrescriptionService {
   }
 
   @Override
-  public PrescriptionResponseDto updatePrescription(Long id, PrescriptionRequestDto request) {
+  public PrescriptionResponseDto updatePrescription(Long id, UpdatePrescriptionRequestDto request) {
     var prescription = getPrescription(id);
-    if (request.getDiagnosisId() != null) {
-      var diagnosis = getDiagnosis(request.getDiagnosisId());
-      prescription.setDiagnosis(diagnosis);
-    }
-    if (request.getDoctorId() != null) {
-      var doctor = getDoctor(request.getDoctorId());
-      prescription.setDoctor(doctor);
-    }
-    if (request.getPatientId() != null) {
-      var patient = getPatient(request.getPatientId());
-      prescription.setPatient(patient);
-    }
-
-    if (request.getStartDate() != null) {
-      prescription.setStartDate(request.getStartDate());
-    }
-
-    if (request.getEndDate() != null) {
-      prescription.setEndDate(request.getEndDate());
-    }
-
-    if (request.getDosage() !=null) {
-      prescription.setDosage(request.getDosage());
-    }
-
-    if (request.getInstructions() != null) {
-      prescription.setInstructions(request.getInstructions());
-    }
-
-    if (request.getMedicationName() != null) {
-      prescription.setMedicationName(request.getMedicationName());
-    }
-
+    prescriptionMapper.updatePrescription(request, prescription);
     var updatedPrescription = prescriptionRepository.save(prescription);
-
     return prescriptionMapper.toResponseDto(updatedPrescription);
   }
 

@@ -29,14 +29,24 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Long
 
   @Query("SELECT p FROM Prescription p WHERE p.patient.user.id = :patientId " +
           "AND p.endDate < :today")
-  Page<Prescription> findExpiredByPatientId(@Param("patientId") Long patientId, @Param("today") LocalDate today, Pageable pageable);
+  Page<Prescription> findExpiredByPatientId(
+          @Param("patientId") Long patientId,
+          @Param("today") LocalDate today,
+          Pageable pageable
+  );
 
   @Query("SELECT p FROM Prescription p WHERE " +
           "LOWER(p.medicationName) LIKE LOWER(CONCAT('%', :medicationName, '%'))")
-  Page<Prescription> findByMedicationNameContainingIgnoreCase(@Param("medicationName") String medicationName, Pageable pageable);
+  Page<Prescription> findByMedicationNameContainingIgnoreCase(
+          @Param("medicationName") String medicationName,
+          Pageable pageable
+  );
 
   @Query("SELECT p FROM Prescription p WHERE p.diagnosis.appointment.id = :appointmentId")
-  Page<Prescription> findByAppointmentId(@Param("appointmentId") Long appointmentId, Pageable pageable);
+  Page<Prescription> findByAppointmentId(
+          @Param("appointmentId") Long appointmentId,
+          Pageable pageable
+  );
 
   //  List<Prescription> findPrescriptionsByDiagnosis(Diagnosis diagnosis);
 }

@@ -1,23 +1,16 @@
 package com.paulinasprojects.ppbackend.dtos;
 
 import com.paulinasprojects.ppbackend.entities.AppointmentStatus;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class AppointmentRequestDto {
-  @NotNull(message = "Appointment date is required")
+public class UpdateAppointmentRequestDto {
   private LocalDate appointmentDate;
 
   private AppointmentStatus status;
   private String notes;
 
-  @NotNull(message = "Doctor id is required")
-  private Long doctorId;
-
-  @NotNull(message = "Patient id is required")
-  private Long patientId;
 }

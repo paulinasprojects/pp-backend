@@ -4,6 +4,7 @@ import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.config.AppConstants;
 import com.paulinasprojects.ppbackend.dtos.AppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdateAppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.UpdateAppointmentStatusDto;
 import com.paulinasprojects.ppbackend.services.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Appointments", description = "API for managing the appointments")
+@Tag(name = "Appointments", description = "API for managing appointments")
 @RequestMapping("/api/appointments")
 public class AppointmentController {
 
@@ -79,8 +80,8 @@ public class AppointmentController {
   @PutMapping("/{id}")
   @Operation(summary = "Update the appointment details")
   public ResponseEntity<AppointmentResponseDto> updateAppointment(
-          @PathVariable Long id,
-       @Valid @RequestBody AppointmentRequestDto request
+       @PathVariable Long id,
+       @Valid @RequestBody UpdateAppointmentRequestDto request
   ) {
     var appointment = appointmentService.updateAppointment(id, request);
     return ResponseEntity.ok(appointment);

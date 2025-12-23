@@ -3,6 +3,7 @@ package com.paulinasprojects.ppbackend.services;
 import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdateDiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.entities.Appointment;
 import com.paulinasprojects.ppbackend.entities.Diagnosis;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
@@ -71,45 +72,25 @@ public class DiagnosisServiceImpl implements DiagnosisService {
   @Override
   public DiagnosisResponseDto createDiagnosis(DiagnosisRequestDto request) {
     var doctor = getDoctor(request.getDoctorId());
+    var patient = getPatient(request.getPatientId());
     var appointment = getAppointment(request.getAppointmentId());
 
-    var patient = getPatient(request.getPatientId());
     var diagnosis = Diagnosis.builder()
-            .appointment(appointment)
-            .notes(request.getNotes())
-            .dateCreated(request.getDateCreated())
             .patient(patient)
             .doctor(doctor)
+            .appointment(appointment)
             .diagnose(request.getDiagnose())
+            .notes(request.getNotes())
+            .dateCreated(request.getDateCreated())
             .build();
     var saved = diagnosisRepository.save(diagnosis);
     return diagnosisMapper.toResponseDto(saved);
   }
 
   @Override
-  public DiagnosisResponseDto updateDiagnosis(Long id, DiagnosisRequestDto request) {
+  public DiagnosisResponseDto updateDiagnosis(Long id, UpdateDiagnosisRequestDto request) {
     var diagnosis = getDiagnosis(id);
-
-    if (request.getAppointmentId() != null) {
-      var appointment = getAppointment(request.getAppointmentId());
-      diagnosis.setAppointment(appointment);
-    }
-
-    if (request.getDoctorId() != null) {
-      var doctor = getDoctor(request.getDoctorId());
-      diagnosis.setDoctor(doctor);
-    }
-    if (request.getPatientId() != null) {
-      var patient = getPatient(request.getPatientId());
-      diagnosis.setPatient(patient);
-    }
-    if (request.getDateCreated() != null) {
-      diagnosis.setDateCreated(request.getDateCreated());
-    }
-    if (request.getNotes() != null) {
-      diagnosis.setNotes(request.getNotes());
-    }
-
+    diagnosisMapper.updateDiagnosis(request, diagnosis);
     var updatedDiagnosis = diagnosisRepository.save(diagnosis);
     return diagnosisMapper.toResponseDto(updatedDiagnosis);
   }

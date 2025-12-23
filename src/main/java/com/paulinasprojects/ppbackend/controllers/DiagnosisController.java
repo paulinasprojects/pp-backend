@@ -4,6 +4,7 @@ import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.config.AppConstants;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.dtos.DiagnosisResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdateDiagnosisRequestDto;
 import com.paulinasprojects.ppbackend.services.DiagnosisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -78,7 +79,7 @@ public class DiagnosisController {
   @Operation(summary = "Update a diagnosis")
   public ResponseEntity<DiagnosisResponseDto> updateDiagnosis(
           @PathVariable Long id,
-       @Valid @RequestBody DiagnosisRequestDto request
+       @Valid @RequestBody UpdateDiagnosisRequestDto request
   ) {
     var diagnosis = diagnosisService.updateDiagnosis(id, request);
     return  ResponseEntity.ok(diagnosis);

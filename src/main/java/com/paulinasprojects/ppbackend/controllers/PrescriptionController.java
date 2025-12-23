@@ -5,6 +5,7 @@ import com.paulinasprojects.ppbackend.config.AppConstants;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRenewalDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.dtos.PrescriptionResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdatePrescriptionRequestDto;
 import com.paulinasprojects.ppbackend.services.PrescriptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +24,7 @@ public class PrescriptionController {
   private final PrescriptionService prescriptionService;
 
   @GetMapping("/search")
-  @Operation(summary = "Search medication my name")
+  @Operation(summary = "Search medication by name")
   public ResponseEntity<PaginatedResponseDto<PrescriptionResponseDto>>searchPrescriptionsByMedication(
           @RequestParam String medicationName,
           @RequestParam(defaultValue = AppConstants.PAGE_NUMBER) Integer page,
@@ -45,7 +46,7 @@ public class PrescriptionController {
   }
 
   @PatchMapping("/{id}/renew")
-  @Operation(summary = "Renew the prescription")
+  @Operation(summary = "Renew a prescription")
   public ResponseEntity<PrescriptionResponseDto> renewPrescription(
           @PathVariable Long id,
           @Valid @RequestBody PrescriptionRenewalDto request
@@ -140,7 +141,7 @@ public class PrescriptionController {
   @Operation(summary = "Update the prescription")
   public ResponseEntity<PrescriptionResponseDto> updatePrescription(
           @PathVariable Long id,
-         @Valid @RequestBody PrescriptionRequestDto request
+          @RequestBody UpdatePrescriptionRequestDto request
   ) {
     var prescription = prescriptionService.updatePrescription(id, request);
     return ResponseEntity.ok(prescription);

@@ -3,6 +3,7 @@ package com.paulinasprojects.ppbackend.services;
 import com.paulinasprojects.ppbackend.common.PaginatedResponseDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentRequestDto;
 import com.paulinasprojects.ppbackend.dtos.AppointmentResponseDto;
+import com.paulinasprojects.ppbackend.dtos.UpdateAppointmentRequestDto;
 import com.paulinasprojects.ppbackend.entities.Appointment;
 import com.paulinasprojects.ppbackend.entities.AppointmentStatus;
 import com.paulinasprojects.ppbackend.entities.DoctorProfile;
@@ -62,7 +63,7 @@ public class AppointmentServiceImpl implements AppointmentService {
   public AppointmentResponseDto createAppointment(AppointmentRequestDto request) {
     var doctor = getDoctor(request.getDoctorId());
     var patient = getPatient(request.getPatientId());
-    Appointment appointment = Appointment.builder()
+    var appointment = Appointment.builder()
             .appointmentDate(request.getAppointmentDate())
             .notes(request.getNotes())
             .doctor(doctor)
@@ -88,29 +89,15 @@ public class AppointmentServiceImpl implements AppointmentService {
       appointment.setStatus(appointmentStatus);
       var updatedAppointment = appointmentRepository.save(appointment);
       return appointmentMapper.toResponseDto(updatedAppointment);
-    }catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
         throw new InvalidStatusException("Invalid appointment status " + status);
     }
   }
 
   @Override
-  public AppointmentResponseDto updateAppointment(Long id, AppointmentRequestDto request) {
+  public AppointmentResponseDto updateAppointment(Long id, UpdateAppointmentRequestDto request) {
     var appointment = getAppointment(id);
-    if (request.getDoctorId() != null) {
-      DoctorProfile doctor = getDoctor(request.getDoctorId());
-      appointment.setDoctor(doctor);
-    }
-    if (request.getPatientId() != null) {
-      PatientProfile patient = getPatient(request.getPatientId());
-      appointment.setPatient(patient);
-    }
-    if (request.getAppointmentDate() != null) {
-      appointment.setAppointmentDate(request.getAppointmentDate());
-    }
-
-    if (request.getNotes() != null) {
-      appointment.setNotes(request.getNotes());
-    }
+    appointmentMapper.updateAppointment(request, appointment);
     var updatedAppointment = appointmentRepository.save(appointment);
     return appointmentMapper.toResponseDto(updatedAppointment);
   }

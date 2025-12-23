@@ -1,6 +1,7 @@
 package com.paulinasprojects.ppbackend.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,16 +13,17 @@ public class PrescriptionRequestDto {
 
   @NotBlank(message = "Dosage is required")
   private String dosage;
+
   private String instructions;
   private LocalDate startDate;
   private LocalDate endDate;
 
-  @NotBlank(message = "Doctor id is required")
+  @NotNull(message = "Doctor id is required")
   private Long doctorId;
 
-  @NotBlank(message = "Patient id is required")
+  @NotNull(message = "Patient id is required")
   private Long patientId;
 
-  @NotBlank(message = "Diagnose id is required")
+  @NotNull(message = "Diagnose id is required")
   private Long diagnosisId;
 }
